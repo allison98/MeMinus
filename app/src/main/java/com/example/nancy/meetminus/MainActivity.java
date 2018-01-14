@@ -12,6 +12,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,8 +47,11 @@ import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 import static java.lang.Math.sqrt;
 
-public class MainActivity extends AppCompatActivity implements MeshStateListener{
+public class MainActivity extends Activity implements MeshStateListener{
 
+    private Dialog dialog;
+
+    private static Map<MeshID, User> allUsers = new HashMap<>();
     //set proximity
     double proximity;
 
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d("MainActivity", "oncreate called");
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
 
         //passes user "me" to it
@@ -82,7 +87,11 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
 
         //set address of "me" user
         me.setMeshID(mm.getUuid());
+        allUsers.put(mm.getUuid(), me);
         friends = me.getFriends();
+
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_close_by);
     }
 
     /*function that constantly updates longitude and latitude_____________
@@ -102,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
 
             if (dist < proximity){
                 //send notification and open dialog
+                dialog.show();
             }
 
         }
@@ -236,8 +246,9 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
      */
     private void handleDataReceived(MeshManager.RightMeshEvent e) {
         final MeshManager.DataReceivedEvent event = (MeshManager.DataReceivedEvent) e;
-
+        Log.d("MainActivity", "threadBef");
         runOnUiThread(new Runnable() {
+
             @Override
             public void run() {
                 final String userID = new String(event.data);
@@ -248,9 +259,28 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User friend = findUser(dataSnapshot, userID);
+                        final User friend = findUser(dataSnapshot, userID);
                         //if response is yes
-                        me.addFriend(friend, Category);
+                        TextView message = dialog.findViewById(R.id.request_user);
+                        message.setText(friend.getUsername() + " wants to connect");
+                        Button allow = dialog.findViewById(R.id.allow_action);
+                        allow.setVisibility(View.VISIBLE);
+                        allow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                me.addFriend(friend, Category);
+                            }
+                        });
+
+                        Button ignore = dialog.findViewById(R.id.cancel_action);
+                        ignore.setVisibility(View.VISIBLE);
+                        ignore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
                     }
 
                     @Override
@@ -274,48 +304,35 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         return dataSnapshot.child(userID).getValue(User.class);
     }
 
-    public Dialog onCreateDialog(String userID) {
-        // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-        String message = userID+"wants to connect";
-        String pos = "Connect";
-        String neg = "Ignore";
-        builder.setMessage(message)
-                .setPositiveButton(pos, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // add contact
-                    }
-                })
-                .setNegativeButton(neg, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // close
-                    }
-                });
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }
     /**
      * Add ppl who are online to your group!!
      * Handles peer update events from the mesh - maintains a list of peers and updates the display.
      *
      * @param e event object from mesh
      */
-    //????????????????how to add object???????????????
     private void handlePeerChanged(MeshManager.RightMeshEvent e) {
         // Update peer list.
         MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
         if (event.state != REMOVED && !users.contains(event.peerUuid)) {
-            users.add(event.peerUuid);
-        } else if (event.state == REMOVED){
-            users.remove(event.peerUuid);
-        }
 
+            users.add(allUsers.get(event.peerUuid));
+        } else if (event.state == REMOVED){
+            users.remove(allUsers.get(event.peerUuid));
+        }
         // Update display.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 updateStatus();
+                renewUserLatitude(me);
+
+                for (Map.Entry<User, String> entry : friends.entrySet())
+                {
+                    renewUserLatitude(entry.getKey());
+                }
+
+                findNearbyFriends();
             }
         });
     }

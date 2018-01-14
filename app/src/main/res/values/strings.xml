@@ -14,6 +14,9 @@
     <string name="Password">Password</string>
     <string name="Account">Or, if you don\'t have an account,</string>
     <string name="SignUpMessage">Please enter your email, username, and password.</string>
+    <string name="user_wants_to_connect">%s is close by</string>
+    <string name="cancel">Cancel</string>
+    <string name="allow">Allow</string>
 
 
 </resources>

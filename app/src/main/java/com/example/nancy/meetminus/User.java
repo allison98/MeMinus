@@ -11,28 +11,25 @@ import io.left.rightmesh.id.MeshID;
  */
 
 public class User {
-    private int count = 0;
+  //  public static HashSet<User>
+    public String userID;
     private String name;
     private String username;
     private String email;
     private String number;
     private String password;
-    public final String userID;
+
     private Map<User, String> friends = new HashMap<>();
 
     private MeshID meshID;
     private double Longitude;
     private double Latitude;
 
-    public User(String name, String username, String email, String password, String number) {
+    public User(String email, String password) {
         this.password = password;
-        this.name = name;
-        this.userID = count+"user";
-        count++;
-        this.username = username;
-        this.email = email;
-        this.number = number;
 
+
+        this.email = email;
     }
 
     public Map<User, String> getFriends(){

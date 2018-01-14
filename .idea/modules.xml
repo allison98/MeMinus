@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MeMinus.iml" filepath="$PROJECT_DIR$/MeMinus.iml" />
-      <module fileurl="file://C:\Users\andre\OneDrive\NWHacks\MeMinus\MeetMinus.iml" filepath="C:\Users\andre\OneDrive\NWHacks\MeMinus\MeetMinus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
