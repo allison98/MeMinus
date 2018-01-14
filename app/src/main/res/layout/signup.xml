@@ -21,28 +21,28 @@
         android:text="MEETMINUS"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         tools:textColor="@android:color/holo_blue_dark" />
-    <Button
-        android:id="@+id/SignIn"
-        android:layout_width="match_parent"
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/email"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/password"
-        android:layout_marginTop="37dp"
-        android:text="Sign In"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="223dp" />
+        android:layout_marginBottom="15dp"
+        android:text="Please enter your email, username, and password."
+        android:textAlignment="center"
+        android:textColor="@color/secondaryText"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/SignUp"
+        android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="11dp"
-        android:text="Sign Up"
+        android:layout_below="@+id/password"
+        android:layout_marginTop="22dp"
+        android:text="Sign up"
         android:textColor="?android:attr/colorBackgroundFloating"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="262dp"
@@ -53,8 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="16dp"
+        android:layout_centerVertical="true"
         android:backgroundTint="@color/borderColor"
         android:ems="10"
         android:hint="Email"
@@ -78,16 +77,7 @@
         android:textColor="@color/common_google_signin_btn_text_light_focused"
         android:textColorHint="@color/secondaryText" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/SignIn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-        android:text="Or, if you don't have an account,"
-        android:textColor="@color/secondaryText"
-        android:textSize="18sp" />
+
 
     <ImageView
         android:id="@+id/imageView"
