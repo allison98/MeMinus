@@ -7,7 +7,7 @@
     tools:context="com.example.nancy.meetminus.MainActivity">
 
     <Button
-        android:enabled="false"
+
         android:id="@+id/btnConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.686" />
 
     <EditText
-        android:enabled="false"
+
         android:id="@+id/edTxtFriend"
         android:layout_width="226dp"
         android:layout_height="46dp"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:enabled="false"
+
         android:id="@+id/textAdd"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
@@ -48,15 +48,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginRight="152dp" />
-
-    <TextView
-        android:id="@+id/textStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Status..."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

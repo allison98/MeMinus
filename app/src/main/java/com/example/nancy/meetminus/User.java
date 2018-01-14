@@ -1,5 +1,9 @@
 package com.example.nancy.meetminus;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,9 +14,10 @@ import io.left.rightmesh.id.MeshID;
  * Created by nancy on 2018-01-13.
  */
 
-public class User {
+public class User implements Parcelable{
   //  public static HashSet<User>
     public String userID;
+    private static int v = 0;
     private String name;
     private String username;
     private String email;
@@ -28,9 +33,32 @@ public class User {
     public User(String email, String password) {
         this.password = password;
 
-
+        this.userID =""+ v++;
         this.email = email;
     }
+
+    protected User(Parcel in) {
+        userID = in.readString();
+        name = in.readString();
+        username = in.readString();
+        email = in.readString();
+        number = in.readString();
+        password = in.readString();
+        Longitude = in.readDouble();
+        Latitude = in.readDouble();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public Map<User, String> getFriends(){
         return friends;
@@ -69,6 +97,20 @@ public class User {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(userID);
+        parcel.writeString(name);
+        parcel.writeString(username);
+        parcel.writeString(email);
+        parcel.writeString(number);
+        parcel.writeString(password);
+        parcel.writeDouble(Longitude);
+        parcel.writeDouble(Latitude);
+    }
 }

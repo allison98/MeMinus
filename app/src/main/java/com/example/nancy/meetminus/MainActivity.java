@@ -19,12 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nancy.meetminus.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,24 +42,24 @@ import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 import static java.lang.Math.sqrt;
 
 public class MainActivity extends Activity implements MeshStateListener{
-
+    static private int v = 0;
     private Dialog dialog;
 
-    private static Map<MeshID, User> allUsers = new HashMap<>();
+    private Map<MeshID, User> allUsers = new HashMap<>();
     //set proximity
     double proximity;
 
     // Port to bind app to.
     private static final int HELLO_PORT = 1000;
 
-    private DatabaseReference myRef;
 
     // MeshManager instance - interface to the mesh network.
-    AndroidMeshManager mm = null;
+    AndroidMeshManager mm;
     private User me;
     private Map<User, String> friends;
     // Set to keep track of peers connected to the mesh.
     Set<User> users = new HashSet<>();
+
 
     /**
      * Called when app first opens, initializes {@link AndroidMeshManager} reference (which will
@@ -83,12 +77,15 @@ public class MainActivity extends Activity implements MeshStateListener{
 
         //passes user "me" to it
         Intent i = getIntent();
-        me = (User) i.getSerializableExtra("MeUser");
-
+        me = (User) i.getParcelableExtra("MeUser");
+        Log.d("here","Grwfds");
         //set address of "me" user
-        me.setMeshID(mm.getUuid());
-        allUsers.put(mm.getUuid(), me);
-        friends = me.getFriends();
+        if (me != null) {
+            me.setMeshID(mm.getUuid());
+            allUsers.put(mm.getUuid(), me);
+            friends = me.getFriends();
+        }
+
 
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_close_by);
@@ -202,42 +199,39 @@ public class MainActivity extends Activity implements MeshStateListener{
                 });
 
                 TextView textAdd = (TextView) findViewById(R.id.textAdd);
-                TextView textStatus = (TextView) findViewById(R.id.textStatus);
+
 
                 //enables views
                 btnConnect.setEnabled(true);
                 edTxtFriend.setEnabled(true);
                 textAdd.setEnabled(true);
 
-                //notify status
-                textStatus.setText(status);
-
             } catch (RightMeshException e) {
                 String status = "Error initializing the library" + e.toString();
                 Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
-                TextView textStatus = (TextView) findViewById(R.id.textStatus);
-                textStatus.setText(status);
+               // TextView textStatus = (TextView) findViewById(R.id.textStatus);
+                //textStatus.setText(status);
                 return;
             }
         }
 
         // Update display on successful calls (i.e. not FAILURE or DISABLED).
         if (state == MeshStateListener.SUCCESS || state == MeshStateListener.RESUME) {
-            updateStatus();
+
         }
     }
 
     /**
      * Update the {@link TextView} with a list of all peers.
      */
-    private void updateStatus() {
-        String status = "uuid: " + mm.getUuid().toString() + "\npeers:\n";
-        for (User user : users) {
-            status += user.getUsername() + "\n";
-        }
-        TextView txtStatus = (TextView) findViewById(R.id.textStatus);
-        txtStatus.setText(status);
-    }
+//    private void updateStatus() {
+//        String status = "uuid: " + mm.getUuid().toString() + "\npeers:\n";
+//        for (User user : users) {
+//            status += user.getUsername() + "\n";
+//        }
+//       // TextView txtStatus = (TextView) findViewById(R.id.textStatus);
+//       // txtStatus.setText(status);
+//    }
 
     /**
      * Handles incoming data events from the mesh - toasts the contents of the data.
@@ -251,15 +245,12 @@ public class MainActivity extends Activity implements MeshStateListener{
 
             @Override
             public void run() {
-                final String userID = new String(event.data);
+                final String userID = "1";
                 final String Category = "friend";
 
-                myRef = FirebaseDatabase.getInstance().getReference();
 
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final User friend = findUser(dataSnapshot, userID);
+
+                        final User friend = allUsers.get(event.peerUuid);
                         //if response is yes
                         TextView message = dialog.findViewById(R.id.request_user);
                         message.setText(friend.getUsername() + " wants to connect");
@@ -281,13 +272,10 @@ public class MainActivity extends Activity implements MeshStateListener{
                             }
                         });
 
-                    }
+                   // }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+               // });
 
 
                 //make a dialog_____________
@@ -300,9 +288,7 @@ public class MainActivity extends Activity implements MeshStateListener{
         });
     }
 
-    public User findUser(DataSnapshot dataSnapshot, String userID){
-        return dataSnapshot.child(userID).getValue(User.class);
-    }
+
 
 
     /**
@@ -324,7 +310,7 @@ public class MainActivity extends Activity implements MeshStateListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updateStatus();
+         //       updateStatus();
                 renewUserLatitude(me);
 
                 for (Map.Entry<User, String> entry : friends.entrySet())
@@ -343,10 +329,15 @@ public class MainActivity extends Activity implements MeshStateListener{
      * @param v calling view
      */
     public void connect(View v, String friendUsername) throws RightMeshException {
+        Log.d("hrwtgsr","GDsfd");
         for(User receiver : users) {
             if (friendUsername.equals(receiver.getUsername())) {
                 //send userID
                 mm.sendDataReliable(receiver.getMeshID(), HELLO_PORT, me.userID.getBytes());
+
+
+
+
 
             }
         }
@@ -367,8 +358,9 @@ public class MainActivity extends Activity implements MeshStateListener{
     }
 
     public void renewUserLatitude(User user) {
-        user.setLongitude(MapsActivityCurrentPlace.getLongitude());
-        user.setLatitude(MapsActivityCurrentPlace.getLatitude());
+
+        user.setLongitude(50+v++);
+        user.setLatitude(50+v++);
     }
 
     /**
