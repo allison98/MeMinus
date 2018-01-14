@@ -9,4 +9,5 @@
 
     <color name="buttonTextColor">#ffffff</color>
     <color name="buttonBG1">#5a595b</color>
+    <color name="BGSignUp">#353535</color>
 </resources>

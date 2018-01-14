@@ -17,4 +17,5 @@ public class SignupActivity extends Activity {
         // Get the view from new_activity.xml
         setContentView(R.layout.signup);
     }
+
 }
