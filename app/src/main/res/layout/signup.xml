@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="109dp"
-        android:text="MEETMINUS"
+        android:text="@string/titleCaps"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 
 
@@ -33,7 +33,7 @@
         android:layout_above="@+id/email"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="15dp"
-        android:text="Please enter your email, username, and password."
+        android:text="@string/SignUpMessage"
         android:textAlignment="center"
         android:textColor="@color/secondaryText"
         android:textSize="18sp" />
@@ -45,7 +45,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/password"
         android:layout_marginTop="22dp"
-        android:text="Sign up"
+        android:text="@string/SignUp"
         android:textColor="?android:attr/colorBackgroundFloating"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="262dp"
@@ -59,7 +59,7 @@
         android:layout_centerVertical="true"
         android:backgroundTint="@color/borderColor"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/Email"
         android:singleLine="true"
         android:textColor="@color/common_google_signin_btn_text_light_focused"
         android:textColorHint="@color/secondaryText" />
@@ -75,7 +75,7 @@
         android:backgroundTint="@color/borderColor"
         android:color="@color/borderColor"
         android:ems="10"
-        android:hint="Pasword"
+        android:hint="@string/Password"
         android:inputType="textPassword"
         android:textColor="@color/common_google_signin_btn_text_light_focused"
         android:textColorHint="@color/secondaryText" />

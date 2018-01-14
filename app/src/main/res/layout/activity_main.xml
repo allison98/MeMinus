@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="109dp"
-        android:text="MEETMINUS"
+        android:text="@string/titleCaps"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         tools:textColor="@android:color/holo_blue_dark" />
     <Button
@@ -29,7 +29,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/password"
         android:layout_marginTop="37dp"
-        android:text="Sign In"
+        android:text="@string/SignIn"
         android:textSize="30sp"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="223dp" />
@@ -42,7 +42,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView3"
         android:layout_marginTop="11dp"
-        android:text="Sign Up"
+        android:text="@string/SignUp"
         android:textColor="?android:attr/colorBackgroundFloating"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="262dp"
@@ -57,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/borderColor"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/Email"
         android:singleLine="true"
         android:textColor="@color/common_google_signin_btn_text_light_focused"
         android:textColorHint="@color/secondaryText" />
@@ -73,7 +73,7 @@
         android:backgroundTint="@color/borderColor"
         android:color="@color/borderColor"
         android:ems="10"
-        android:hint="Pasword"
+        android:hint="@string/Password"
         android:inputType="textPassword"
         android:textColor="@color/common_google_signin_btn_text_light_focused"
         android:textColorHint="@color/secondaryText" />
@@ -85,7 +85,7 @@
         android:layout_below="@+id/SignIn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
-        android:text="Or, if you don't have an account,"
+        android:text="@string/Account"
         android:textColor="@color/secondaryText"
         android:textSize="18sp" />
 

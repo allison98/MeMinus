@@ -18,4 +18,6 @@ public class SignupActivity extends Activity {
         setContentView(R.layout.signup);
     }
 
+
+
 }
