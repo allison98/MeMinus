@@ -47,6 +47,9 @@ public class MapsActivityCurrentPlace extends FragmentActivity
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
 
+    private static double latitude;
+    private static double longitude;
+
     // The entry points to the Places API.
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
@@ -69,12 +72,14 @@ public class MapsActivityCurrentPlace extends FragmentActivity
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+
     // Used for selecting the current place.
     private static final int M_MAX_ENTRIES = 5;
     private String[] mLikelyPlaceNames;
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +192,15 @@ public class MapsActivityCurrentPlace extends FragmentActivity
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
+
+    public static double getLatitude() {
+        return new Double(latitude);
+    }
+
+    public static double getLongitude() {
+        return new Double(longitude);
+    }
+
     private void getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
@@ -203,7 +217,12 @@ public class MapsActivityCurrentPlace extends FragmentActivity
                             mLastKnownLocation = task.getResult();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM))
+
+
+                            ;
+                            latitude = mLastKnownLocation.getLatitude();
+                            longitude = mLastKnownLocation.getLongitude();
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

@@ -1,14 +1,14 @@
 package com.example.nancy.meetminus;
 
-/**
- * Created by andre on 2018-01-13.
- */
+import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-public class Login {
+public class Login extends Activity {
 
-    public static void LogIn() {
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
     }
-
-
 }
