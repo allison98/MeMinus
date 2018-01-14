@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
@@ -51,6 +49,7 @@ import static java.lang.Math.sqrt;
 public class MainActivity extends AppCompatActivity implements MeshStateListener{
 
     //set proximity
+    double proximity;
 
     // Port to bind app to.
     private static final int HELLO_PORT = 1000;
@@ -74,19 +73,23 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
+
+        //passes user "me" to it
         Intent i = getIntent();
         me = (User) i.getSerializableExtra("MeUser");
-        me.setMeshID(mm.getUuid());
 
+        //set address of "me" user
+        me.setMeshID(mm.getUuid());
         friends = me.getFriends();
     }
 
-    //function that constantly updates longitude and latitude_____________
-
+    /*function that constantly updates longitude and latitude_____________
+    *modifies lat/lon of a user through setLatitude and set longitude
     /**function that loops through your contacts and checks your friends locations
      *if within a certain proximity to you, send alert
-     **/
+    **/
     public void findNearbyFriends(){
 
         for (Map.Entry<User, String> entry : friends.entrySet())
@@ -95,13 +98,30 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
             double lat = user.getLatitude();
             double lon = user.getLongitude();
 
-            double dist = sqrt((me.getLatitude() - lat)*(me.getLatitude() - lat)+ (me.getLongitude()-lon)*(me.getLongitude()-lon));
+            double dist = haversine(me.getLatitude(), me.getLongitude(), lat, lon);
 
-            System.out.println(entry.getKey() + "/" + entry.getValue());
+            if (dist < proximity){
+                //send notification and open dialog
+            }
+
         }
 
     }
 
+
+    //calculates distance between 2 coordinates
+    public static double haversine(
+            double lat1, double lng1, double lat2, double lng2) {
+        int r = 6371; // average radius of the earth in km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double d = r * c;
+        return d;
+    }
 
     /**
      * Called when activity is on screen.
@@ -116,19 +136,7 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
-    /**
-     * Called when the app is being closed (not just navigated away from). Shuts down
-     * the {@link AndroidMeshManager} instance.
-     */
-    @Override
-    protected void onDestroy() {
-        try {
-            super.onDestroy();
-            mm.stop();
-        } catch (MeshService.ServiceDisconnectedException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     /**
@@ -241,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User friend = findUser(dataSnapshot, userID);
+                        //if response is yes
                         me.addFriend(friend, Category);
                     }
 
@@ -249,10 +258,6 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
 
                     }
                 });
-
-
-
-
 
 
                 //make a dialog_____________
@@ -330,11 +335,6 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
-    public void renewUserLatitude(User user) {
-        user.setLongitude(MapsActivityCurrentPlace.getLongitude());
-        user.setLatitude(MapsActivityCurrentPlace.getLatitude());
-    }
-
     /**
      * Open mesh settings screen.
      *
@@ -349,4 +349,22 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
+    public void renewUserLatitude(User user) {
+        user.setLongitude(MapsActivityCurrentPlace.getLongitude());
+        user.setLatitude(MapsActivityCurrentPlace.getLatitude());
+    }
+
+    /**
+     * Called when the app is being closed (not just navigated away from). Shuts down
+     * the {@link AndroidMeshManager} instance.
+     */
+    @Override
+    protected void onDestroy() {
+        try {
+            super.onDestroy();
+            mm.stop();
+        } catch (MeshService.ServiceDisconnectedException e) {
+            e.printStackTrace();
+        }
+    }
 }
